@@ -15,11 +15,12 @@ module.exports = ->
 
     pipe: (f) ->
       s = module.exports()
+      pipePush = s.push
       s.push = o.push
       emitter.on "data", (data) ->
         try
           f data, (value) ->
-            s.push(value)
+            pipePush(value)
 
         catch e
           channels.error.push(e)
