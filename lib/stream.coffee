@@ -5,41 +5,44 @@ q = require "q"
 module.exports = ->
   emitter = new events.EventEmitter()
 
-  push: (value) ->
-    emitter.emit("data", value)
+  o = 
+    push: (value) ->
+      emitter.emit("data", value)
 
-  close: ->
-    emitter.emit "close"
-    emitter.removeAllListeners()
+    close: ->
+      emitter.emit "close"
+      emitter.removeAllListeners()
 
-  pipe: (f) ->
-    s = module.exports()
-    emitter.on "data", (data) ->
-      try
-        f data, (value) ->
-          s.push(value)
+    pipe: (f) ->
+      s = module.exports()
+      s.push = o.push
+      emitter.on "data", (data) ->
+        try
+          f data, (value) ->
+            s.push(value)
 
-      catch e
-        channels.error.push(e)
+        catch e
+          channels.error.push(e)
 
-    emitter.on "close", ->
-      s.close()
+      emitter.on "close", ->
+        s.close()
 
-    s
+      s
 
-  to: (stream) ->
-    emitter.on "data", (data) -> stream.push(data)
+    to: (stream) ->
+      emitter.on "data", (data) -> stream.push(data)
 
-  waitFor: (f) ->
-    d = q.defer()
+    waitFor: (f) ->
+      d = q.defer()
 
-    emitter.on "data", (data) ->
-      if f(data)
-        emitter.removeListener "data", arguments.callee
-        d.resolve(data)
+      emitter.on "data", (data) ->
+        if f(data)
+          emitter.removeListener "data", arguments.callee
+          d.resolve(data)
 
-    d.promise
+      d.promise
 
+  o
 
 module.exports.fromEvent = (emitter, event) ->
   stream = module.exports()
