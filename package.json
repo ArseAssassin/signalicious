@@ -1,0 +1,14 @@
+{
+  "name": "signalicious",
+  "version": "0.0.0",
+  "description": "",
+  "main": "lib/index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tuomas Kanerva",
+  "license": "MIT",
+  "dependencies": {
+    "q": "^1.2.0"
+  }
+}
