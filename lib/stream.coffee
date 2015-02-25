@@ -31,6 +31,9 @@ module.exports = ->
       s
 
     to: (stream) ->
+      if !stream.push
+        throw new Error("Object doesn't implement push - might not be a Signalicious stream")
+
       emitter.on "data", (data) -> stream.push(data)
 
     waitFor: (f) ->

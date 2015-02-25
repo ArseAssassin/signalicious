@@ -16,3 +16,6 @@ module.exports =
   log: () -> (data, cb) ->
     console.log data
     cb data
+
+  toString: () -> (data, cb) ->
+    cb data.toString()
