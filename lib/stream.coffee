@@ -36,6 +36,8 @@ module.exports = ->
 
       emitter.on "data", (data) -> stream.push(data)
 
+      o
+
     waitFor: (f) ->
       d = q.defer()
 

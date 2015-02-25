@@ -19,3 +19,16 @@ module.exports =
 
   toString: () -> (data, cb) ->
     cb data.toString()
+
+  add: (glue) -> (data, cb) ->
+    cb (data + glue)
+
+  intercalate: (glue) -> 
+    first = true
+    (data, cb) ->
+      if first
+        first = false
+        cb data
+      else
+        cb glue
+        cb data
