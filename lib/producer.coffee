@@ -8,3 +8,12 @@ module.exports =
     readable.on "close", s.close
 
     s
+
+  every: (ms) ->
+    s = stream()
+
+    i = 0
+    setInterval (-> s.push i++), ms
+
+    s
+

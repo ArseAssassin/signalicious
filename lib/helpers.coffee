@@ -7,8 +7,8 @@ module.exports =
 
   id: (it) -> it
 
-  resolvePromise: () -> (data, cb) ->
-    data.then cb
+  resolvePromise: () -> (promise, cb) ->
+    promise.then (data) -> cb(data); data
 
   sync: (f) -> (data, cb) ->
     cb f(data)

@@ -13,7 +13,7 @@ module.exports = (initialValue) ->
 
   o =
     merge: (stream, f) ->
-      stream.pipe (data, cb) ->
+      stream.to push: (data, cb) ->
         setValue f(value, data)
 
       o
@@ -39,12 +39,17 @@ module.exports = (initialValue) ->
 
 module.exports.fromPromise = (promise) ->
   input = stream()
+  errors = stream()
 
   s = module.exports(resolved: false, value: undefined)
     .merge input, (value, data) -> resolved: true, value: data
+    .merge errors, (value, error) -> resolved: true, error: error
 
   promise.then (value) ->
     input.push value
+
+  promise.fail (error) ->
+    errors.push error
 
   s
 

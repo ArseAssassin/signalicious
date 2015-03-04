@@ -2,8 +2,9 @@ events = require "events"
 
 q = require "q"
 
-module.exports = ->
-  emitter = new events.EventEmitter()
+stream = ->
+  emitter = new events.EventEmitter
+  closed = false
 
   o = 
     push: (value) ->
@@ -14,27 +15,29 @@ module.exports = ->
       emitter.removeAllListeners()
 
     pipe: (f) ->
-      s = module.exports()
-      pipePush = s.push
-      s.push = o.push
+      pipedStream = stream()
+
+      next              = pipedStream.push
+      pipedStream.push  = o.push
+
       emitter.on "data", (data) ->
         try
           f data, (value) ->
-            pipePush(value)
+            next(value)
 
         catch e
           channels.error.push(e)
 
       emitter.on "close", ->
-        s.close()
+        pipedStream.close()
 
-      s
+      pipedStream
 
     to: (stream) ->
       if !stream.push
         throw new Error("Object doesn't implement push - might not be a Signalicious stream")
 
-      emitter.on "data", (data) -> stream.push(data)
+      emitter.on "data", stream.push
 
       o
 
@@ -50,20 +53,14 @@ module.exports = ->
 
   o
 
-module.exports.fromEvent = (emitter, event) ->
-  stream = module.exports()
-  emitter.on event, (value) ->
-    stream.push(value)
 
-  stream
+stream.fromEvent = (emitter, event) ->
+  eventStream = module.exports()
+  emitter.on event, eventStream.push
+
+  eventStream
 
 
-module.exports.every = (ms) ->
-  stream = module.exports()
-
-  i = 0
-  setInterval((-> stream.push(i++)), ms)
-
-  stream
+module.exports = stream
 
 channels = require "./channels"
