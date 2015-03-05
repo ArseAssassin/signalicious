@@ -100,7 +100,7 @@ describe "helpers", ->
 
     expect(n).to.equal 2
 
-  it "intercalate should intercalate stream values with its argument", ->
+  it ".intercalate should intercalate stream values with its argument", ->
     n = ""
 
     @stream
@@ -115,3 +115,16 @@ describe "helpers", ->
     @stream.push "3"
 
     expect(n).to.equal "1-2-3"
+
+  it ".filter should not let invalid values pass", ->
+    n = 0
+
+    @stream
+      .pipe helpers.filter (x) -> x % 2 == 0
+      .pipe (it) -> n = it
+
+    @stream.push 1
+    expect(n).to.equal 0
+    @stream.push 2
+    expect(n).to.equal 2
+

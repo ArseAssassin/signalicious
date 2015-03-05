@@ -68,6 +68,7 @@ score = s.signal(0)
   # when the snake eats an apple, score is incremented
   .merge eats, (value) -> value + 1
 
+# snake is a list of pairs [x, y] that it occupies
 snake = s.signal([[5, 5]])
   # move the snake on every frame
   .merge frame, (value) -> 
