@@ -47,6 +47,10 @@ collisions = s.stream()
       .length > 1
 
 
+# ================ #
+# helper functions #
+# ================ #
+
 wrapTo = (length) -> (n) -> (n + length) % length
 wrapToWidth = wrapTo WIDTH
 wrapToHeight = wrapTo HEIGHT
