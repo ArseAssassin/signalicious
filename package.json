@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "",
   "main": "lib/index.coffee",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArseAssassin/signalicious"
+  },
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register"
   },
