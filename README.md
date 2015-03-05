@@ -12,15 +12,13 @@ npm install signalicious
 ### Streams
 
 ```coffeescript
-# capitalizing a string through a stream
+# capitalize string from stdin
 
 s = require "signalicious"
 
-stream = s.stream()
-  .pipe (data, cb) -> cb data.toUpperCase()
-  .pipe s.helpers.log()
-
-stream.push("hello world")
+s.channels.stdin
+  .pipe (data, cb) -> cb data.toString().toUpperCase()
+  .to s.channels.stdout
 ```
 
 ### Signals
@@ -30,12 +28,13 @@ stream.push("hello world")
 
 s = require "signalicious"
 
-add = s.stream.every(1000)
+s.channels.enableErrorLogging()
+
+add = s.producer.every(1000)
 
 counter = s.signal(0)
   .merge add, (value, frame) -> value + 1
-  
-counter.to s.stream().pipe s.helpers.log()
+  .to s.channels.log
 ```
 
 ### Promises
@@ -45,11 +44,9 @@ counter.to s.stream().pipe s.helpers.log()
 
 s = require "signalicious"
 
-stream = s.stream.every(100)
-
-promise = stream.waitFor (val) -> val > 10
-
-promise.then console.log
+s.producer.every(100)
+  .waitFor (val) -> val > 10
+  .then console.log
 ```
 
 ```coffeescript
@@ -57,13 +54,12 @@ promise.then console.log
 
 s = require "signalicious"
 
-stream = s.stream.every(100)
+stream = s.producer.every(100)
 
 promise = stream.waitFor (val) -> val > 5
 
 stream
   .pipe s.helpers.blockPromise s.signal.fromPromise(promise)
-  .pipe (data) -> console.log data
-
+  .to s.channels.log
 ```
 
