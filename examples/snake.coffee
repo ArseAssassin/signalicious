@@ -15,20 +15,26 @@ DIRECTIONS = [
   [1,   0]
 ]
 
+
+# ========== #
+# game logic #
+# ========== #
+
 # update game state every 50ms
 frame = s.producer.every(50)
 
-  # if the snake is dead, the game is no longer update
+  # if the snake is dead, the game is no longer updated
   .pipe s.helpers.filter ->
     dead.value() == false
 
 eats = s.stream()
+
+  # if the snake's head collides with the apple, the snake eats it
   .pipe s.helpers.filter (snek) ->
-    # if the snake's head collides with the apple, the snake eats it
     equal(snek[0], apple.value())
 
-# the snake turns randomly
 turns = s.producer.every(80)
+  # the snake turns randomly
   .pipe s.helpers.sync -> 
     Math.round(Math.random() * 2) - 1
 
@@ -45,7 +51,7 @@ wrapTo = (length) -> (n) -> (n + length) % length
 wrapToWidth = wrapTo WIDTH
 wrapToHeight = wrapTo HEIGHT
 
-# apple is placed randomly anywhere in the game view
+# apple is placed randomly in the game view
 getApple = ->
   getRand = (n) -> Math.floor(Math.random() * n)
   [getRand(WIDTH), getRand(HEIGHT)]
@@ -63,6 +69,11 @@ include   = (a, squares) ->
       return true
 
   false
+
+
+# ========= #
+# game data #
+# ========= #
 
 score = s.signal(0)
   # when the snake eats an apple, score is incremented
@@ -93,6 +104,10 @@ dead = s.signal(false)
   # when the snake collides, it drops dead
   .merge collisions, -> true
 
+
+# =============== #
+# rendering logic #
+# =============== #
 
 frame
   .pipe s.helpers.sync ->
