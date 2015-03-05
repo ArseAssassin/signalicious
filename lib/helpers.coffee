@@ -38,3 +38,7 @@ module.exports =
       else
         cb glue
         cb data
+
+  filter: (f) -> (data, cb) ->
+    if f(data)
+      cb data
