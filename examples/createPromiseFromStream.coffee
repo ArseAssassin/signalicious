@@ -2,8 +2,6 @@
 
 s = require "signalicious"
 
-stream = s.stream.every(100)
-
-promise = stream.waitFor (val) -> val > 10
-
-promise.then console.log
+s.producer.every(100)
+  .waitFor (val) -> val > 10
+  .then console.log

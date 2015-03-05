@@ -1,9 +1,8 @@
-# capitalizing a string through a stream
+# capitalize string from stdin
 
 s = require "signalicious"
 
-stream = s.stream()
-  .pipe (data, cb) -> cb data.toUpperCase()
-  .pipe s.helpers.log()
+s.channels.stdin
+  .pipe (data, cb) -> cb data.toString().toUpperCase()
+  .to s.channels.stdout
 
-stream.push("hello world")

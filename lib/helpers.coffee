@@ -10,6 +10,9 @@ module.exports =
   resolvePromise: () -> (promise, cb) ->
     promise.then (data) -> cb(data); data
 
+  exhaustStream: () -> (stream, cb) ->
+    stream.to push: cb
+
   sync: (f) -> (data, cb) ->
     cb f(data)
 
@@ -22,6 +25,9 @@ module.exports =
 
   add: (glue) -> (data, cb) ->
     cb (data + glue)
+
+  prepend: (glue) -> (data, cb) ->
+    cb (glue + data)
 
   intercalate: (glue) -> 
     first = true

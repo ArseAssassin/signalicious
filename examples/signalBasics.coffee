@@ -2,9 +2,10 @@
 
 s = require "signalicious"
 
-add = s.stream.every(1000)
+s.channels.enableErrorLogging()
+
+add = s.producer.every(1000)
 
 counter = s.signal(0)
   .merge add, (value, frame) -> value + 1
-
-counter.to s.stream().pipe s.helpers.log()
+  .to s.channels.log
