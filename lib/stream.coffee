@@ -4,7 +4,6 @@ q = require "q"
 
 stream = ->
   emitter = new events.EventEmitter
-  closed = false
 
   o = 
     push: (value) ->
