@@ -1,3 +1,5 @@
+errorChannel = require "./errorChannel"
+
 module.exports = 
   block: (signal, f) -> (data, cb) ->
     signal.blockUntil f, -> cb(data)
@@ -11,7 +13,9 @@ module.exports =
     promise.then (data) -> cb(data); data
 
   exhaustStream: () -> (stream, cb) ->
-    stream.to push: cb
+    stream.to 
+      push:         cb
+      handleError:  errorChannel.push
 
   sync: (f) -> (data, cb) ->
     cb f(data)
@@ -42,3 +46,16 @@ module.exports =
   filter: (f) -> (data, cb) ->
     if f(data)
       cb data
+
+  split: () -> (data, cb) ->
+    for value in data
+      cb value
+
+  bufferStreamUntilClosed: () -> 
+    buffer = []
+    f = (value) ->
+      buffer.push value
+
+    f.onClose = -> f.next buffer
+
+    f

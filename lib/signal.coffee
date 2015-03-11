@@ -2,6 +2,7 @@ events = require "events"
 
 stream = require "./stream"
 helpers = require "./helpers"
+channels = require "./channels"
 
 module.exports = (initialValue) ->
   value = initialValue
@@ -13,12 +14,12 @@ module.exports = (initialValue) ->
 
   o =
     merge: (stream, f) ->
-      stream.to push: (data, cb) ->
-        setValue f(value, data)
+      stream.to 
+        push: (data, cb) ->
+          setValue f(value, data)
+        handleError: (error) -> channels.error.push error.error
 
       o
-
-    emitter: emitter
 
     value: -> value
 
@@ -33,6 +34,8 @@ module.exports = (initialValue) ->
 
     to: (stream) ->
       emitter.on "data", stream.push
+
+      o
 
   o
 

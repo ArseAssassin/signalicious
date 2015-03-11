@@ -16,6 +16,34 @@ DIRECTIONS = [
 ]
 
 
+# ================ #
+# helper functions #
+# ================ #
+
+wrapTo = (length) -> (n) -> (n + length) % length
+wrapToWidth = wrapTo WIDTH
+wrapToHeight = wrapTo HEIGHT
+
+# apple is placed randomly in the game view
+getApple = ->
+  getRand = (n) -> Math.floor(Math.random() * n)
+  [getRand(WIDTH), getRand(HEIGHT)]
+
+length    = -> score.value() + 3
+addStep   = (head) -> 
+  add(head, DIRECTIONS[direction.value()])
+
+add       = ([x0, y0], [x1, y1]) -> [wrapToWidth(x0 + x1), wrapToHeight(y0 + y1)]
+equal     = ([x0, y0], [x1, y1]) -> x0 == x1 && y0 == y1
+
+include   = (a, squares) ->
+  for b in squares
+    if equal(a, b)
+      return true
+
+  false
+
+
 # ========== #
 # game logic #
 # ========== #
@@ -47,34 +75,6 @@ collisions = s.stream()
       .length > 1
 
 
-# ================ #
-# helper functions #
-# ================ #
-
-wrapTo = (length) -> (n) -> (n + length) % length
-wrapToWidth = wrapTo WIDTH
-wrapToHeight = wrapTo HEIGHT
-
-# apple is placed randomly in the game view
-getApple = ->
-  getRand = (n) -> Math.floor(Math.random() * n)
-  [getRand(WIDTH), getRand(HEIGHT)]
-
-length    = -> score.value() + 3
-addStep   = (head) -> 
-  add(head, DIRECTIONS[direction.value()])
-
-add       = ([x0, y0], [x1, y1]) -> [wrapToWidth(x0 + x1), wrapToHeight(y0 + y1)]
-equal     = ([x0, y0], [x1, y1]) -> x0 == x1 && y0 == y1
-
-include   = (a, squares) ->
-  for b in squares
-    if equal(a, b)
-      return true
-
-  false
-
-
 # ========= #
 # game data #
 # ========= #
@@ -89,11 +89,11 @@ snake = s.signal([[5, 5]])
   .merge frame, (value) -> 
     [addStep(value[0])].concat(value).slice(0, length())
 
-# when the snake moves, check for treats
-snake.to eats
+  # when the snake moves, check for treats
+  .to eats
 
-# when the snake moves, check for collisions
-snake.to collisions
+  # when the snake moves, check for collisions
+  .to collisions
 
 apple = s.signal(getApple())
   # when the apple is eaten, create a new one

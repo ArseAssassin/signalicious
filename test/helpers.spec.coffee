@@ -128,3 +128,20 @@ describe "helpers", ->
     @stream.push 2
     expect(n).to.equal 2
 
+  it ".bufferStreamUntilClosed should buffer values until the stream is closed", ->
+    n = 0
+
+    @stream
+      .pipe helpers.bufferStreamUntilClosed()
+      .pipe helpers.split()
+      .pipe (it) -> n += it
+
+    @stream.push 1
+    @stream.push 2
+    @stream.push 3
+
+    expect(n).to.equal 0
+
+    @stream.close()
+
+    expect(n).to.equal 6
