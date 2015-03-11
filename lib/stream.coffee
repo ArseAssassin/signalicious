@@ -13,7 +13,6 @@ resolveContext = ->
 stream = ->
   context = resolveContext()
   emitter = new events.EventEmitter
-  closed = false
 
   o = 
     push: (value, path) ->

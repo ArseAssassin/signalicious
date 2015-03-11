@@ -28,8 +28,6 @@ s.channels.stdin
 
 s = require "signalicious"
 
-s.channels.enableErrorLogging()
-
 add = s.producer.every(1000)
 
 counter = s.signal(0)
