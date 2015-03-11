@@ -46,6 +46,37 @@ counter = s.signal(0)
   .to s.channels.log
 ```
 
+## Producers
+
+Producer is a stream that produces values without values being pushed to it. The following producers are available:
+
+    fromNodeStream(stream): takes a Node stream object and returns a stream
+    
+    every(ms): pushes an incrementing value every ms milliseconds
+    
+    fromEvent(emitter, name): takes an event emitter and an event name; every time the emitter emits event of name, push the first argument to the stream
+    
+    
+## Consumer
+
+Consumer is a stream that consumes any values pushed to it. The following consumers are available:
+
+    fromNodeStream(stream): takes a writable Node stream and writes any values pushed to it - errors are pushed to signalicious.channels.error
+
+## Channels
+
+Some standard streams are available in signalicious.channels
+
+    stdin: reads values from stdin
+    
+    stdout: writes values it consumes to stdout - only accepts strings
+    
+    stderr: writes values it consumes to stderr - only accepts strings
+    
+    error: does nothing by default, when enableErrorLogging is called, writes error messages to stderr when errors are encountered during piping
+    
+    log: stringifies values and appends a newline to them - basically acts like console.log for streams
+
 ## Error handling
 
 When a pipe encounters an error, it's caught by the stream and propagated forward until the consumer's handleError function is called. You can recover from an error by calling .recover on the pipe:
@@ -67,6 +98,9 @@ s.stream()
 If the error is never recovered, Signalicious consumers will push error messages to signalicious.channels.error. You should call signalicious.channels.enableErrorLogging at the start of your program to make sure that errors will be propagated to stderr.
 
 The error object propagated to the recovery function has the following properties:
-  error: the error object thrown
-  path: the path of the data packet through your program - an array including line numbers and file names
-  data: the data being piped before your program encountered an error
+
+    error: the error object thrown
+    
+    path: the path of the data packet through your program - an array including line numbers and file names
+    
+    data: the data being piped before your program encountered an error
