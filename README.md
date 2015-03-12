@@ -1,14 +1,6 @@
 # Signalicious
 Signalicious is a functional reactive programming library focusing on simplicity. It's built around two main concepts: signals and streams.
 
-## Stream
-
-A stream is essentially a pipe in which data moves forward. The idea is basically the same as Unix pipelines: data is piped from operation to operation until it's consumed. Typically you'd source a stream from an event, for example a button click.
-
-## Signal
-
-A signal is essentially a mutable value. It has a starting value and streams merge into it to mutate its state. To model a counter, you'd set its starting value as 0 and then merge the increment stream into it.
-
 ## Quick start
 
 To install 
@@ -18,6 +10,9 @@ npm install signalicious
 ```
 
 ### Streams
+
+A stream is essentially a pipe in which data moves forward. The idea is basically the same as Unix pipelines: data is piped from operation to operation until it's consumed. Typically you'd source a stream from an event, for example a button click.
+
 
 ```coffeescript
 # capitalize string from stdin
@@ -33,6 +28,8 @@ s.channels.stdin
 ```
 
 ### Signals
+
+A signal is essentially a mutable value. It has a starting value and streams merge into it to mutate its state. To model a counter, you'd set its starting value as 0 and then merge the increment stream into it.
 
 ```coffeescript
 # create a signal that counts up every second and print the value
