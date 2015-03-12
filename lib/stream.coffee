@@ -95,11 +95,5 @@ stream = ->
   o
 
 
-stream.fromEvent = (emitter, event) ->
-  eventStream = module.exports()
-  emitter.on event, eventStream.push
-
-  eventStream
-
 
 module.exports = stream

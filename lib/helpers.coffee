@@ -59,3 +59,21 @@ module.exports =
     f.onClose = -> f.next buffer
 
     f
+
+  take: (n) -> (data, cb) ->
+    if n > 0
+      n--
+      cb data
+    else
+      cb.close()
+
+  drop: (n) -> (data, cb) ->
+    if n > 0
+      n--
+    else
+      cb data
+
+  get: (n) -> (data, cb) ->
+    cb data[n]
+
+  second: () -> module.exports.get(1)

@@ -110,16 +110,3 @@ describe "stream", ->
       expect(n).to.equal 1
       
 
-
-describe "stream.fromEvent", ->
-  it "should push to returned stream every time event is emitted", ->
-    n = 0
-
-    emitter = new events.EventEmitter
-
-    stream = signalicious.stream.fromEvent(emitter, "activate")
-    stream.pipe (data) -> n = data
-
-    emitter.emit "activate", 1
-
-    expect(n).to.equal 1

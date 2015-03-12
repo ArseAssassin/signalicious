@@ -14,3 +14,8 @@ module.exports =
     setInterval (-> s.push i++), ms
     s
 
+  fromEvent: (emitter, event) ->
+    s = stream()
+    emitter.on event, s.push
+
+    s
